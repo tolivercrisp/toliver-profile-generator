@@ -4,6 +4,51 @@ const fs = require("fs");
 // An array to store the employee objects
 const employees = [];
 
+// Show the menu
+function showMenu() {
+  inquirer.prompt([
+    {
+      type: "list",
+      name: "type",
+      message: "What type of team member would you like to add?",
+      choices: ["Manager", "Engineer", "Intern", "I don't want to add any more team members"],
+    },
+  ]).then((answer) => {
+    if (answer.type === "Manager") {
+      // Prompt the user for information about the team manager
+      promptManager().then((manager) => {
+        // Add the manager object to the array
+        employees.push(manager);
+
+        // Show the menu again
+        showMenu();
+      });
+    } else if (answer.type === "Engineer") {
+      // Prompt the user for information about the engineer
+      promptEngineer().then((engineer) => {
+        // Add the engineer object to the array
+        employees.push(engineer);
+
+        // Show the menu again
+        showMenu();
+      });
+    } else if (answer.type === "Intern") {
+      // Prompt the user for information about the intern
+      promptIntern().then((intern) => {
+        // Add the intern object to the array
+        employees.push(intern);
+
+        // Show the menu again
+        showMenu();
+      });
+    } else {
+      // If the user does not want to add any more team members, generate the HTML page
+      generateHTML(employees);
+    }
+  });
+}
+
+
 // Prompt the user for information about the team manager
 function promptManager() {
   return inquirer.prompt([
@@ -83,81 +128,59 @@ function promptIntern() {
 
 // Generate an HTML page that displays summaries for each employee
 function generateHTML(employees) {
-    var html = "<!DOCTYPE html>\n<html>\n<head>\n";
-    html += "<title>Employee Summary</title>\n</head>\n<body>\n";
-  
-    employees.forEach((employee) => {
-      html += "<h1>" + employee.name + "</h1>\n";
-      html += "<p>ID: " + employee.id + "</p>\n";
-      html += "<p>Email: " + employee.email + "</p>\n";
-      if (employee.role === "Manager") {
-        html += "<p>Office number: " + employee.officeNumber + "</p>\n";
-      } else if (employee.role === "Engineer") {
-        html += "<p>GitHub username: " + employee.github + "</p>\n";
-      } else if (employee.role === "Intern") {
-        html += "<p>School: " + employee.school + "</p>\n";
-      }
-    });
+  var html = `
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Employee Summary</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+  `;
 
-    html += "</body>\n</html>";
-  
-    // Write the HTML to a file
-    fs.writeFile("employees.html", html, function (err) {
-      if (err) {
-        return console.log(err);
-      }
-  
-      console.log("Employee summary generated successfully!");
-    });
-  }
-
-  function promptUser() {
-    return inquirer.prompt([
-      {
-        type: "list",
-        name: "type",
-        message: "What type of team member would you like to add?",
-        choices: ["Engineer", "Intern", "I don't want to add any more team members"],
-      },
-    ]);
-  }
-
-  // Prompt the user for information about the team manager
-  promptManager().then((manager) => {
-  // Add the manager object to the array
-  employees.push(manager);
-  
-
-  // Show the menu
-    return inquirer.prompt([
-      {
-        type: "list",
-        name: "type",
-        message: "What type of team member would you like to add?",
-        choices: ["Engineer", "Intern", "I don't want to add any more team members"],
-      },
-  ]).then((answer) => {
-    if (answer.type === "Engineer") {
-      // Prompt the user for information about the engineer
-      promptEngineer().then((engineer) => {
-        // Add the engineer object to the array
-        employees.push(engineer);
-
-        // Show the menu again
-        promptUser();
-      });
-    } else if (answer.type === "Intern") {
-      // Prompt the user for information about the intern
-      promptIntern().then((intern) => {
-        // Add the intern object to the array
-        employees.push(intern);
-
-        // Show the menu again
-        promptUser();
-      });
-    } else {
-      // If the user does not want to add any more team members, generate the HTML page
-      generateHTML(employees);
-    }
+  employees.forEach((employee) => {
+    html += `
+    <div class="card mt-4" style="width: 18rem;">
+      <div class="card-body">
+        <h5 class="card-title">${employee.name}</h5>
+        <p class="card-text"><em>${employee.role}</em></p>
+        <p class="card-text">ID: ${employee.id}</p>
+        <p class="card-text">Email: ${employee.email}</p>
+        `;
+        switch (employee.role) {
+          case "Manager":
+            html += `<p class="card-text">Office number: ${employee.officeNumber}</p>`;
+            break;
+          case "Engineer":
+            html += `<p class="card-text">GitHub username: ${employee.github}</p>`;
+            break;
+          case "Intern":
+            html += `<p class="card-text">School: ${employee.school}</p>`;
+            break;
+        }
+    html += `
+      </div>
+    </div>
+    `;
   });
-});
+
+  html += `
+    </div>
+  </body>
+  </html>
+  `;
+
+  // Write the HTML to a file
+  fs.writeFile("employees.html", html, function (err) {
+    if (err) {
+      return console.log(err);
+    }
+
+    console.log("Employee summary generated successfully!");
+  });
+}
+
+// Show the menu
+showMenu();
