@@ -1,4 +1,1 @@
-# this repository doesn't just contain starter code because I've
-# added this gitignore file <3
-
-.DS_Store
+node_modules
