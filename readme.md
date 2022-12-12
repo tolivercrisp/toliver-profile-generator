@@ -23,9 +23,6 @@ To use the team profile generator, run the following command in the command-line
 
 **node server.js**
 
-  ### Video
-    ![alt text](assets/images/screenshot.png)
-    ![alt text](assets/images/screenshot.png)
 
 ## License
 
