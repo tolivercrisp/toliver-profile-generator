@@ -256,20 +256,16 @@ function showMenu() {
                       <h6 class="card-subtitle mb-2 text-muted">${employee.role}</h6>
                       <p class="card-text">ID: ${employee.id}</p>
                       <p class="card-text">Email: ${employee.email}</p>
-
-                      // If the employee is a manager, add the office number (using ternary operators from ES6)
                       ${
                         employee.officeNumber
                           ? `<p class="card-text">Office Number: ${employee.officeNumber}</p>`
                           : ""
                      }
-                      // If the employee is an engineer, add the GitHub username
                       ${
                         employee.github
                           ? `<p class="card-text">GitHub: ${employee.github}</p>`
                           : ""
                       }
-                      // If the employee is an intern, add the school
                       ${
                         employee.school
                           ? `<p class="card-text">School: ${employee.school}</p>`
@@ -282,7 +278,7 @@ function showMenu() {
               // Join the array of HTML strings into a single string
                 ).join("")}
 
-              // Unfortunate <div> hell 
+             
             </div>
           </div>
         </div>
@@ -301,3 +297,7 @@ function showMenu() {
 // Start the program
 promptManager();
 
+module.exports = Employee;
+module.exports = Manager;
+module.exports = Engineer;
+module.exports = Intern;
